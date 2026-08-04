@@ -1044,7 +1044,7 @@ html.dark .site-card.style-3:not(.frosted-glass-effect) .site-title {
   font-size: 0.8rem !important;
   font-weight: 400 !important;
   line-height: 1.25rem !important;
-  color: var(--search-engine-text-color, #111827) !important;
+  color: var(--search-engine-text-color, rgba(255, 255, 255, 0.94)) !important;
   opacity: 1 !important;
   text-shadow: none !important;
   cursor: pointer;
