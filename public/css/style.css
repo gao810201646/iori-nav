@@ -1010,7 +1010,7 @@ html.dark .site-card.style-3:not(.frosted-glass-effect) .site-title {
 /* 外部搜索：统一使用纯文字 + 蓝色下划线，文字颜色跟随对应设备的书签标题设置 */
 @media (min-width: 768px) {
   body:not(.desktop-page-style3) {
-    --search-engine-text-color: var(--desktop-card-title-color, #111827);
+    --search-engine-text-color: var(--desktop-card-title-color, rgba(255, 255, 255, 0.92));
   }
 
   body.desktop-page-style3 {
@@ -1020,7 +1020,7 @@ html.dark .site-card.style-3:not(.frosted-glass-effect) .site-title {
 
 @media (max-width: 767px) {
   body:not(.mobile-page-style3) {
-    --search-engine-text-color: var(--mobile-card-title-color, #111827);
+    --search-engine-text-color: var(--mobile-card-title-color, rgba(255, 255, 255, 0.92));
   }
 
   body.mobile-page-style3 {
