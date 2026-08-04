@@ -227,10 +227,11 @@ export async function onRequest(context) {
   const allLinkActive = !catalogExists;
   const allLinkClass = allLinkActive ? 'active' : 'inactive';
   const allLinkActiveMarker = allLinkActive ? 'nav-item-active' : '';
-  const horizontalAllLink = `
+  /*const horizontalAllLink = `
     <div class="menu-item-wrapper relative inline-block text-left">
       <a href="?catalog=all" class="nav-btn ${allLinkClass} ${allLinkActiveMarker}">全部</a>
-    </div>`;
+    </div>`;*/
+  const horizontalAllLink = '';
   const horizontalCatalogMarkup = horizontalAllLink + renderHorizontalMenu(rootCategories, currentCatalogName);
   const catalogLinkMarkup = renderVerticalMenu(rootCategories, currentCatalogName, isCustomWallpaper);
 
