@@ -285,7 +285,7 @@
                 ${logoHtml}
               </div>
               <div class="flex-1 min-w-0">
-                <h3 class="${cardConfig.titleClass}" title="${site.nameHtml}">${site.nameHtml}</h3>
+                <h3 class="${cardConfig.titleClass}">${site.nameHtml}</h3>
                 ${categoryHtml}
               </div>
             </div>
