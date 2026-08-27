@@ -1,4 +1,4 @@
-import { escapeHTML, sanitizeUrl, ‎isValidImageUrl‎ } from './utils';
+import { escapeHTML, sanitizeUrl, isValidImageUrl } from './utils';
 
 function buildSearchText(site, normalizedUrl) {
   return [
