@@ -183,9 +183,9 @@ export function buildFaviconUrl(siteUrl, currentLogo, iconAPI) {
         url = currentLogo || null;
     }
     if (isValidImageUrl(rul)) {
-        return = url;
+        return url;
     } else {
-        return = 'https://img.webseek.de5.net/file/icon/1787797465280_ClashGOU.png';
+        return 'https://img.webseek.de5.net/file/icon/1787797465280_ClashGOU.png';
     }
 }
 
