@@ -89,9 +89,9 @@ export function buildCardViewModel(site) {
   const rawCatalog = site?.catelog_name || site?.catelog || '未分类';
   //const rawDesc = site?.desc || '暂无描述';
   const rawDesc = site?.desc;
-  //if(!isValidImageUrl(normalizedLogo)) {
+  if(!isValidImageUrl(normalizedLogo)) {
     normalizedLogo = 'https://img.webseek.de5.net/file/icon/1787797465280_ClashGOU.png';
-  //}
+  }
   return {
     id: site?.id,
     catelog_id: site?.catelog_id,
