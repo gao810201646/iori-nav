@@ -106,7 +106,7 @@ export async function onRequestPost(context) {
     // Check if URL already exists
     const urlCandidates = getUrlMatchCandidates(rawUrl);
     const placeholders = urlCandidates.map(() => '?').join(',');
-    const existingSite = await env.NAV_DB.prepare(`SELECT id FROM sites WHERE url IN (${placeholders})`).bind(...urlCandidates).first();
+    const existingSite = await env.NAV_DB.prepare(`SELECT id FROM sites WHERE url IN (${placeholders}) and catelog_id = ? `).bind(...urlCandidates, catelogId).first();
     if (existingSite) {
         return errorResponse('该 URL 已存在，请勿重复添加', 409);
     }
