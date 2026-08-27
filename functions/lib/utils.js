@@ -173,14 +173,43 @@ export function escapeLikePattern(str) {
  * @returns {string|null}
  */
 export function buildFaviconUrl(siteUrl, currentLogo, iconAPI) {
-    if (currentLogo && !currentLogo.startsWith('data:image')) return currentLogo;
-    if (!siteUrl || !(siteUrl.startsWith('https://') || siteUrl.startsWith('http://'))) return currentLogo || null;
+    let url = null;
+    if (currentLogo && !currentLogo.startsWith('data:image')) url = currentLogo;
+    if (!siteUrl || !(siteUrl.startsWith('https://') || siteUrl.startsWith('http://'))) url = currentLogo || null;
     try {
         const domain = new URL(siteUrl).host;
-        return `${iconAPI}${domain}`;
+        url = `${iconAPI}${domain}`;
     } catch {
-        return currentLogo || null;
+        url = currentLogo || null;
     }
+    if (isValidImageUrl(rul)) {
+        return = url;
+    } else {
+        return = 'https://img.webseek.de5.net/file/icon/1787797465280_ClashGOU.png';
+    }
+}
+
+/**
+ * 判断图片URL是否有效（使用HEAD请求）
+ * @param {string} url - 图片URL
+ * @param {number} timeout - 超时时间(ms)
+ * @returns {Promise<boolean>}
+ */
+export function isValidImageUrl(url, timeout = 5000) {
+    if (!url) return Promise.resolve(false);
+    
+    const sanitized = sanitizeUrl(url);
+    if (!sanitized) return Promise.resolve(false);
+    
+    return fetch(sanitized, {
+        method: 'HEAD',
+        signal: AbortSignal.timeout(timeout)
+    })
+    .then(response => {
+        const contentType = response.headers.get('content-type');
+        return response.ok && contentType && contentType.startsWith('image/');
+    })
+    .catch(() => false);
 }
 
 /**
