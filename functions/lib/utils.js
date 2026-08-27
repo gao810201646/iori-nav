@@ -173,19 +173,13 @@ export function escapeLikePattern(str) {
  * @returns {string|null}
  */
 export function buildFaviconUrl(siteUrl, currentLogo, iconAPI) {
-    let url = null;
-    if (currentLogo && !currentLogo.startsWith('data:image')) url = currentLogo;
-    if (!siteUrl || !(siteUrl.startsWith('https://') || siteUrl.startsWith('http://'))) url = currentLogo || null;
+    if (currentLogo && !currentLogo.startsWith('data:image')) return currentLogo;
+    if (!siteUrl || !(siteUrl.startsWith('https://') || siteUrl.startsWith('http://'))) return currentLogo || null;
     try {
         const domain = new URL(siteUrl).host;
-        url = `${iconAPI}${domain}`;
+        return = `${iconAPI}${domain}`;
     } catch {
-        url = currentLogo || null;
-    }
-    if (isValidImageUrl(url)) {
-        return url;
-    } else {
-        return 'https://img.webseek.de5.net/file/icon/1787797465280_ClashGOU.png';
+        return = currentLogo || null;
     }
 }
 
