@@ -177,9 +177,9 @@ export function buildFaviconUrl(siteUrl, currentLogo, iconAPI) {
     if (!siteUrl || !(siteUrl.startsWith('https://') || siteUrl.startsWith('http://'))) return currentLogo || null;
     try {
         const domain = new URL(siteUrl).host;
-        return = `${iconAPI}${domain}`;
+        return `${iconAPI}${domain}`;
     } catch {
-        return = currentLogo || null;
+        return currentLogo || null;
     }
 }
 
