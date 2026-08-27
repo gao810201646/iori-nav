@@ -187,7 +187,7 @@ export function buildFaviconUrl(siteUrl, currentLogo, iconAPI) {
 /**
  * 判断图片URL是否有效
  */
-export function isValidImageUrl(url, options = {}) {
+export async function isValidImageUrl(url, options = {}) {
     const {
         timeout = 5000,
         invalidSources = ['yandex']
