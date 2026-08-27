@@ -70,8 +70,8 @@ export async function onRequestPut(context) {
 
     const urlCandidates = getUrlMatchCandidates(rawUrl);
     const placeholders = urlCandidates.map(() => '?').join(',');
-    const duplicate = await env.NAV_DB.prepare(`SELECT id FROM sites WHERE url IN (${placeholders}) AND id != ?`)
-      .bind(...urlCandidates, id)
+    const duplicate = await env.NAV_DB.prepare(`SELECT id FROM sites WHERE url IN (${placeholders}) and catelog_id = ? AND id != ?`)
+      .bind(...urlCandidates, catelog_id, id)
       .first();
     if (duplicate) {
       return errorResponse('该 URL 已存在，请勿重复添加', 409);
