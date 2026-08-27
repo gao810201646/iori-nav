@@ -90,7 +90,7 @@ export function buildCardViewModel(site) {
   //const rawDesc = site?.desc || '暂无描述';
   const rawDesc = site?.desc;
   if(!isValidImageUrl(normalizedLogo)) {
-    normalizedUrl = 'https://img.webseek.de5.net/file/icon/1787797465280_ClashGOU.png';
+    normalizedLogo = 'https://img.webseek.de5.net/file/icon/1787797465280_ClashGOU.png';
   }
   return {
     id: site?.id,
