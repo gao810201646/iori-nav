@@ -184,26 +184,111 @@ export function buildFaviconUrl(siteUrl, currentLogo, iconAPI) {
 }
 
 /**
- * 判断图片URL是否有效（使用HEAD请求）
- * @param {string} url - 图片URL
- * @param {number} timeout - 超时时间(ms)
- * @returns {Promise<boolean>}
+ * 检测图片是否为纯色
+ * @param {ImageData} imageData - Canvas 的 ImageData 对象
+ * @returns {boolean} 如果是纯色返回 true
  */
-export function isValidImageUrl(url, timeout = 5000) {
-    if (!url) return Promise.resolve(false);
+function isSolidColorImage(imageData) {
+    const data = imageData.data;
+    if (data.length < 4) return true;
     
-    const sanitized = sanitizeUrl(url);
-    if (!sanitized) return Promise.resolve(false);
+    const firstR = data[0];
+    const firstG = data[1];
+    const firstB = data[2];
     
-    return fetch(sanitized, {
-        method: 'HEAD',
-        signal: AbortSignal.timeout(timeout)
-    })
-    .then(response => {
-        const contentType = response.headers.get('content-type');
-        return response.ok && contentType && contentType.startsWith('image/');
-    })
-    .catch(() => false);
+    // 遍历所有像素，检查是否颜色一致
+    for (let i = 0; i < data.length; i += 4) {
+        if (data[i] !== firstR || data[i+1] !== firstG || data[i+2] !== firstB) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * 判断图片URL是否有效（基于纯色检测）
+ * @param {string} url - 图片URL
+ * @param {Object} options - 配置选项
+ * @param {number} options.timeout - 超时时间(ms)，默认5000
+ * @param {number} options.sampleRate - 采样率（1-100），默认100（全采样），提高性能可降低
+ * @returns {Promise<boolean>} true表示有效（非纯色），false表示无效（纯色或加载失败）
+ */
+export function isValidImageUrl(url, options = {}) {
+    const {
+        timeout = 5000,
+        sampleRate = 100
+    } = options;
+
+    return new Promise((resolve) => {
+        const sanitized = sanitizeUrl(url);
+        if (!sanitized) return resolve(false);
+
+        const img = new Image();
+        img.crossOrigin = 'Anonymous'; // 需要服务器支持 CORS
+        
+        let timer = null;
+        let isResolved = false;
+
+        const cleanup = () => {
+            if (timer) clearTimeout(timer);
+            img.onload = null;
+            img.onerror = null;
+            img.src = '';
+        };
+
+        const finish = (result) => {
+            if (isResolved) return;
+            isResolved = true;
+            cleanup();
+            resolve(result);
+        };
+
+        img.onload = () => {
+            try {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                
+                let imageData;
+                if (sampleRate < 100) {
+                    // 采样检测：只检查部分像素以提高性能
+                    const fullData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const data = fullData.data;
+                    const step = Math.max(1, Math.floor(100 / sampleRate));
+                    const sampledArray = new Uint8ClampedArray(data.length / step);
+                    let idx = 0;
+                    for (let i = 0; i < data.length; i += step * 4) {
+                        if (idx + 3 < sampledArray.length) {
+                            sampledArray[idx] = data[i];
+                            sampledArray[idx + 1] = data[i + 1];
+                            sampledArray[idx + 2] = data[i + 2];
+                            sampledArray[idx + 3] = data[i + 3];
+                            idx += 4;
+                        }
+                    }
+                    imageData = new ImageData(
+                        sampledArray.slice(0, idx),
+                        Math.ceil(canvas.width / step),
+                        Math.ceil(canvas.height / step)
+                    );
+                } else {
+                    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                }
+                
+                const isSolid = isSolidColorImage(imageData);
+                finish(!isSolid); // 非纯色即为有效
+            } catch (error) {
+                // Canvas 可能因跨域等问题失败，降级为有效
+                finish(true);
+            }
+        };
+
+        img.onerror = () => finish(false);
+        timer = setTimeout(() => finish(false), timeout);
+        img.src = sanitized;
+    });
 }
 
 /**
