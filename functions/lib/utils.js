@@ -182,7 +182,7 @@ export function buildFaviconUrl(siteUrl, currentLogo, iconAPI) {
     } catch {
         url = currentLogo || null;
     }
-    if (isValidImageUrl(rul)) {
+    if (isValidImageUrl(url)) {
         return url;
     } else {
         return 'https://img.webseek.de5.net/file/icon/1787797465280_ClashGOU.png';
