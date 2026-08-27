@@ -1,4 +1,4 @@
-import { escapeHTML, sanitizeUrl } from './utils';
+import { escapeHTML, sanitizeUrl, ‎isValidImageUrl‎ } from './utils';
 
 function buildSearchText(site, normalizedUrl) {
   return [
@@ -88,7 +88,9 @@ export function buildCardViewModel(site) {
   const normalizedLogo = sanitizeUrl(site?.logo);
   const rawCatalog = site?.catelog_name || site?.catelog || '未分类';
   const rawDesc = site?.desc || '暂无描述';
-
+  if(!isValidImageUrl(normalizedLogo)) {
+    normalizedUrl = 'https://img.webseek.de5.net/file/icon/1787797465280_ClashGOU.png';
+  }
   return {
     id: site?.id,
     catelog_id: site?.catelog_id,
